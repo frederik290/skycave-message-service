@@ -1,0 +1,26 @@
+{
+  "name": "skycave-message-service",
+  "version": "1.0.0",
+  "description": "Port of the MsDO message-serivce, now as a serverless service on aws",
+  "main": "handler.js",
+  "dependencies": {
+    "babel": "^6.23.0",
+    "fs": "0.0.1-security",
+    "serverless-bundle": "^3.1.0",
+    "serverless-pseudo-parameters": "^2.5.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/frederik290/skycave-message-service.git"
+  },
+  "author": "Frederik Kjeldsen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/frederik290/skycave-message-service/issues"
+  },
+  "homepage": "https://github.com/frederik290/skycave-message-service#readme"
+}
