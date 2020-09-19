@@ -13,9 +13,17 @@ provider:
   region: eu-west-1
 
 functions:
+  createMessage:
+    handler: ./src/handlers/createMessage.handler
+    events:
+      - http:
+          method: POST
+          path: /message/{position}
+  
   getInfo:
     handler: ./src/handlers/info.handler
     events:
       - http:
           method: GET
           path: /info
+  
