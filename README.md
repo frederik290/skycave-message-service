@@ -17,16 +17,14 @@ POST /message/{position}
     "contents": "string"
 }
 
-creatorId: Max length 36
+creatorId: Max length 50
 creatorName: Max length 50
 contents: Max length 100
+position: Min length 1, Max length 5 (for each coordinate)
 
 Response
 Status: 201 Created
 Location: /message/{messageID}
-(none)
-
-Status: 404 Not Found
 (none)
 
 Status: 400 Bad Request
@@ -90,7 +88,7 @@ PUT /message/{messageID}
     "contents": "string"
 }
 
-creatorId: Max length 36
+creatorId: Max length 50
 contents: Max length 100
 
 Response:

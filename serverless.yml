@@ -11,19 +11,31 @@ provider:
   memorySize: 256
   stage: ${opt:stage, 'dev'}
   region: eu-west-1
+  environment:
+    MESSAGE_TABLE_NAME: ${self:custom.MessageTable.name}  
+  iamRoleStatements:
+    - ${file(iam/MessageTableIAM.yml):MessageTableIAM}
+
+resources:
+  Resources:
+    MessageTable: ${file(resources/MessageTable.yml):MessageTable}
 
 functions:
   createMessage:
-    handler: ./src/handlers/createMessage.handler
+    handler: src/handlers/createMessage.handler
     events:
       - http:
           method: POST
           path: /message/{position}
   
   getInfo:
-    handler: ./src/handlers/info.handler
+    handler: src/handlers/info.handler
     events:
       - http:
           method: GET
           path: /info
-  
+
+custom:
+  MessageTable:
+    name: !Ref MessageTable
+    arn: !GetAtt MessageTable.Arn
