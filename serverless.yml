@@ -26,8 +26,21 @@ functions:
     events:
       - http:
           method: POST
-          path: /message/{position}
-  
+          path: /createMessage/{position}
+
+  getMessages:
+    handler: src/handlers/getMessages.handler
+    events:
+      - http:
+          method: GET
+          path: /getMessages
+
+  getMessage:
+    handler: src/handlers/getMessage.handler
+    events:
+      - http:
+          method: GET
+          path: /getMessage/{id}
   getInfo:
     handler: src/handlers/info.handler
     events:

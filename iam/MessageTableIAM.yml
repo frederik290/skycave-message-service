@@ -1,9 +1,9 @@
  MessageTableIAM:
   Effect: Allow
   Action:
+    - dynamodb:GetItem
     - dynamodb:PutItem
     - dynamodb:Scan
-    - dynamodb:GetItem
     - dynamodb:UpdateItem
     - dynamodb:Query
   Resource:

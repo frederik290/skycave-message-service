@@ -8,8 +8,9 @@ MessageService
 ==============
 
 Create new message
+-------------------
 
-POST /message/{position}
+POST /createMessage/{position}
 
 {
     "creatorId": "string",
@@ -24,16 +25,35 @@ position: Min length 1, Max length 5 (for each coordinate)
 
 Response
 Status: 201 Created
-Location: /message/{messageID}
+Location: /getMessage/{id}
 (none)
 
 Status: 400 Bad Request
 (none)
 
+Get message
+------------
+
+GET /getMessage/{id}
+
+Response
+Status: 200 OK
+{
+    "id": "string",
+    "creatorId": "string",
+    "creatorName": "string",
+    "contents": "string",
+    "position": "string",
+    "creatorTimeStampISO8601": "string"
+}
+
+Status: 404 Not found
+(none)
+
 Get messages
 ------------
 
-GET /message/{position}/{startIndex}/{pageSize}
+GET /getMessages/{position}/{startIndex}/{pageSize}
 pageSize: Optional, default 20, limit: 1 - 50
 startIndex: Required, limit: 0-1000
 
@@ -61,27 +81,11 @@ Status: 200 OK
 Status: 404 Not Found
 (none)
 
-GET /message/{messageid}
-
-Response
-Status: 200 OK
-{
-    "id": "string",
-    "creatorId": "string",
-    "creatorName": "string",
-    "contents": "string",
-    "position": "string",
-    "creatorTimeStampISO8601": "string"
-}
-
-Status: 404 Not found
-(none)
-
 
 Update message
 --------------
 
-PUT /message/{messageID}
+PUT /updateMessage/{id}
 
 {
     "creatorId": "string",

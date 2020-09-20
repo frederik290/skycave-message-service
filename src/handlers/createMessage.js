@@ -4,6 +4,7 @@ import createError from 'http-errors';
 import createMessageSchema from '../lib/schemas/createMessageSchema';
 import validator from '@middy/validator';
 import commonMiddelware from '../lib/commonMiddelware';
+import constants from '../lib/constants';
 
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 
@@ -23,7 +24,7 @@ async function createMessage(event, context){
     return {
         statusCode: 201,
         body: JSON.stringify({
-            location: `/message/${message.id}`,
+            location: `${constants.GET_MESSAGE_PATH}/${message.id}`,
         }),
     };
 }
