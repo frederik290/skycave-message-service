@@ -4,9 +4,8 @@ import commonMiddelware from '../lib/commonMiddelware';
 
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 
-async function getMessage(event, context){
+export async function getMessageById(id){
     let message;
-    const { id } = event.pathParameters;
 
     try {
         const result = await dynamodb.get({
@@ -21,8 +20,14 @@ async function getMessage(event, context){
     }
 
     if(!message){
-        throw new createError.NotFound(`Message with id ${id} not found..`);
+        throw new createError.NotFound(`Message with id ${id} not found.`);
     }
+   return message;
+}
+
+async function getMessage(event, context){
+    const { id } = event.pathParameters;
+    const message = await getMessageById(id);
 
     return {
         statusCode: 200,

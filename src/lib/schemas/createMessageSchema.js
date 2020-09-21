@@ -30,7 +30,7 @@ const schema = {
             properties: {
                 position: {
                     type: 'string',
-                    pattern: '^\\([0-9]{1,5},[0-9]{1,5},[0-9]{1,5}\\)$'
+                    pattern: '^\\((-)?[0-9]{1,5},(-)?[0-9]{1,5},(-)?[0-9]{1,5}\\)$'
                 }
             },
             required: ['position']

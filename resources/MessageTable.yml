@@ -6,7 +6,19 @@ MessageTable:
         AttributeDefinitions:
           - AttributeName: id
             AttributeType: S
+          - AttributeName: position
+            AttributeType: S
+          - AttributeName: creatorTimeStampISO8601
+            AttributeType: S
         KeySchema:
           - AttributeName: id
             KeyType: HASH
-        
+        GlobalSecondaryIndexes:
+          - IndexName: positionAndCreationTime
+            KeySchema:
+              - AttributeName: position
+                KeyType: HASH
+              - AttributeName: creatorTimeStampISO8601
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL

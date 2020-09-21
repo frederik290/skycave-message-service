@@ -33,7 +33,10 @@ functions:
     events:
       - http:
           method: GET
-          path: /getMessages
+          path: /getMessages/{position}/{startIndex}
+      - http:
+          method: GET
+          path: /getMessages/{position}/{startIndex}/{pageSize}
 
   getMessage:
     handler: src/handlers/getMessage.handler
@@ -41,6 +44,14 @@ functions:
       - http:
           method: GET
           path: /getMessage/{id}
+  
+  updateMessage:
+    handler: src/handlers/updateMessage.handler
+    events:
+      - http:
+          method: PUT
+          path: /updateMessage/{id}
+
   getInfo:
     handler: src/handlers/info.handler
     events:
