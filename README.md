@@ -54,7 +54,7 @@ Get messages
 ------------
 
 GET /getMessages/{position}/{startIndex}/{pageSize}
-pageSize: Optional, default 20, limit: 1 - 50
+pageSize: Optional, default 3, limit: 1 - 50
 startIndex: Required, limit: 0-1000
 
 Response

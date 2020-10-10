@@ -9,3 +9,4 @@
   Resource:
     - ${self:custom.MessageTable.arn}
     - !Join ['/', ['${self:custom.MessageTable.arn}', 'index', 'positionAndCreationTime']]
+    - !Join ['/', ['${self:custom.MessageTable.arn}', 'index', 'positionIndex']]

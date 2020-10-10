@@ -10,6 +10,8 @@ MessageTable:
             AttributeType: S
           - AttributeName: creatorTimeStampISO8601
             AttributeType: S
+          - AttributeName: positionIndex
+            AttributeType: 'N'
         KeySchema:
           - AttributeName: id
             KeyType: HASH
@@ -19,6 +21,14 @@ MessageTable:
               - AttributeName: position
                 KeyType: HASH
               - AttributeName: creatorTimeStampISO8601
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+          - IndexName: positionIndex
+            KeySchema:
+              - AttributeName: position
+                KeyType: HASH
+              - AttributeName: positionIndex
                 KeyType: RANGE
             Projection:
               ProjectionType: ALL
