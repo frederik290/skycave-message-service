@@ -18,6 +18,9 @@ const schema = {
                     minLength: 1,
                     maxLength: 100,
                 },
+                positionIndex: {
+                    type: 'integer',
+                },
             },
             required: [
                 'creatorId',

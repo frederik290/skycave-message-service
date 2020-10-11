@@ -5,16 +5,17 @@ import createMessageSchema from '../lib/schemas/createMessageSchema';
 import validator from '@middy/validator';
 import commonMiddelware from '../lib/commonMiddelware';
 import constants from '../lib/constants';
+import {getMessagesWithLargestIndexFromPosition} from './getMessage';
 
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 
 async function createMessage(event, context){
-    const message = createMessageObject(event);
+    const newMessage = await createMessageObject(event);
 
     try {
         await dynamodb.put({
             TableName: process.env.MESSAGE_TABLE_NAME,
-            Item: message,
+            Item: newMessage,
         }).promise();
     } catch(error) {
         console.log(error);
@@ -24,15 +25,22 @@ async function createMessage(event, context){
     return {
         statusCode: 201,
         body: JSON.stringify({
-            location: `${constants.GET_MESSAGE_PATH}/${message.id}`,
+            location: `${constants.GET_MESSAGE_PATH}/${newMessage.id}`,
         }),
     };
 }
 
-function createMessageObject(event){
+async function createMessageObject(event){
     const { position } = event.pathParameters;
     const { creatorId, creatorName, contents } = event.body;
     const now = new Date();
+    let positionIndex = 0;
+    let messagesFromDb = await getMessagesWithLargestIndexFromPosition(position);
+
+    if(messagesFromDb.length > 0){
+        let message = messagesFromDb[0];
+        positionIndex = message.positionIndex + 1;
+    }
 
     const message = {
         id: uuid(),
@@ -41,6 +49,7 @@ function createMessageObject(event){
         contents,
         position,
         creatorTimeStampISO8601: now.toISOString(),
+        positionIndex,
     };
     return message;
 }
