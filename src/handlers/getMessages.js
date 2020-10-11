@@ -13,11 +13,8 @@ async function getMessages(event, context){
     let ps = Number(pageSize);
 
     const count = await getNumberOfMessageForPosition(position);
-    console.log(`Found ${count} items for position ${position}`);
-
     const firstIndex = si > count ? count : si;
     const lastIndex = si + ps > count ? count : si + ps;
-    console.log(`firstIndex: ${firstIndex}, lastIndex: ${lastIndex}`);
     const params = getQueryParams(position, pageSize, firstIndex, lastIndex);
 
     try {
@@ -37,11 +34,12 @@ async function getMessages(event, context){
 function getQueryParams(position, pageSize, firstIndex, lastIndex){
     const params = {
         TableName: constants.MESSAGE_TABLE_NAME,
-        IndexName: 'positionIndex',
-        KeyConditionExpression: '#position = :position and #positionIndex > :fi',
+        IndexName: constants.POSITION_INDEX,
+        KeyConditionExpression: '#position = :position and #positionIndex BETWEEN :firstIndex and :lastIndex',
         ExpressionAttributeValues: {
             ':position': position,
-            ':fi': firstIndex,
+            ':firstIndex': firstIndex,
+            ':lastIndex': lastIndex,
         },
         ExpressionAttributeNames: {
             '#position': 'position',
@@ -50,7 +48,7 @@ function getQueryParams(position, pageSize, firstIndex, lastIndex){
         Limit: pageSize,
     };
 
-    console.log(`full params=${JSON.stringify(params)}`);
+    console.log(`params=${JSON.stringify(params)}`);
     return params;
 }
 
@@ -66,6 +64,7 @@ async function getNumberOfMessageForPosition(position){
     };
     try {
         const countResult = await dynamodb.query(params).promise();
+        console.log(`Found ${countResult.Count} items for position ${position}`);
         return countResult.Count;
     } catch (error) {
         console.log(error);
