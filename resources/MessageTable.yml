@@ -32,3 +32,5 @@ MessageTable:
                 KeyType: RANGE
             Projection:
               ProjectionType: ALL
+
+

@@ -1,7 +1,7 @@
 import AWS from 'aws-sdk';
 import createError from 'http-errors';
 import commonMiddelware from '../lib/commonMiddelware';
-import constants from '../lib/constants';
+import CONSTANTS from '../lib/constants';
 
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 
@@ -14,12 +14,14 @@ async function getMessages(event, context){
 
     const count = await getNumberOfMessageForPosition(position);
     const firstIndex = si > count ? count : si;
-    const lastIndex = si + ps > count ? count : si + ps;
-    const params = getQueryParams(position, pageSize, firstIndex, lastIndex);
+    const lastIndex = (si + ps -1) > count ? count : (si + ps -1);
+
+
+    const params = getQueryParams(position, firstIndex, lastIndex);
 
     try {
         const result = await dynamodb.query(params).promise();
-        messages = result.Items;
+        messages = result.Items.map(dbItemToMessage);
     } catch (error) {
         console.log(error);
         throw new createError.InternalServerError(error);
@@ -31,11 +33,27 @@ async function getMessages(event, context){
     };
 }
 
-function getQueryParams(position, pageSize, firstIndex, lastIndex){
+
+function dbItemToMessage(dbItem){
+    return  {
+        creatorTimeStampISO8601: dbItem.creatorTimeStampISO8601,
+        creatorName: dbItem.creatorName,
+        contents: dbItem.contents,
+        id: dbItem.id,
+        position: dbItem.position,
+        creatorId: dbItem.creatorId
+    };
+}
+
+
+function getQueryParams(position, firstIndex, lastIndex){
+    const exp = '#position = :position and '
+              + 'positionIndex BETWEEN :firstIndex and :lastIndex';
+
     const params = {
-        TableName: constants.MESSAGE_TABLE_NAME,
-        IndexName: constants.POSITION_INDEX,
-        KeyConditionExpression: '#position = :position and #positionIndex BETWEEN :firstIndex and :lastIndex',
+        TableName: CONSTANTS.MESSAGE_TABLE_NAME,
+        IndexName: CONSTANTS.POSITION_INDEX,
+        KeyConditionExpression: exp,
         ExpressionAttributeValues: {
             ':position': position,
             ':firstIndex': firstIndex,
@@ -43,9 +61,7 @@ function getQueryParams(position, pageSize, firstIndex, lastIndex){
         },
         ExpressionAttributeNames: {
             '#position': 'position',
-            '#positionIndex': 'positionIndex',
         },
-        Limit: pageSize,
     };
 
     console.log(`params=${JSON.stringify(params)}`);
@@ -54,8 +70,8 @@ function getQueryParams(position, pageSize, firstIndex, lastIndex){
 
 async function getNumberOfMessageForPosition(position){
     const params = {
-        TableName: constants.MESSAGE_TABLE_NAME,
-        IndexName: constants.POSITION_AND_CREATOR_INDEX_NAME,
+        TableName: CONSTANTS.MESSAGE_TABLE_NAME,
+        IndexName: CONSTANTS.POSITION_AND_CREATOR_INDEX_NAME,
         ScanIndexForward: false,
         KeyConditionExpression: '#position = :position',
         ExpressionAttributeValues: {':position': position,},

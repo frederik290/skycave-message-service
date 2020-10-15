@@ -16,7 +16,7 @@ async function updateMessage(event, context){
     console.log(`input=${JSON.stringify(input)}, message.creatorId=${message.creatorId}`);
 
     if(!updateAllowed)
-        throw new createError.Forbidden(`Creator with id ${creatorId} is now allowed to update message with id ${id}`);
+        throw new createError.Forbidden(`Creator with id ${creatorId} is not allowed to update message with id ${id}`);
 
     const params = {
         TableName: constants.MESSAGE_TABLE_NAME,
